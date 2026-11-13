@@ -131,3 +131,16 @@ body.w-tb .w-acct{margin:10px 14px 0 auto}
  .tb-main{padding:4px 16px 18px}
 }
 @media print{.tb-nav,.tb-pn{display:none!important}.tb-wrap{display:block;padding:0}.tb-main{border:none;padding:0}}
+
+/* 목차 */
+.tb-toc{display:flex;flex-direction:column;gap:8px;margin:14px 0 6px}
+.tb-toc-row{display:flex;gap:12px;align-items:center;text-align:left;width:100%;background:#F8F6F1;border:1px solid #E3DED3;border-radius:12px;padding:12px 14px;font:inherit;font-size:16px;color:#1B2A41;cursor:pointer}
+.tb-toc-row:hover{border-color:#F2A03D;background:#FFF7EC}
+.tb-toc-row .n{flex:none;background:#1B2A41;color:#fff;font-weight:800;font-size:13px;border-radius:999px;padding:3px 11px}
+/* 앱 설치 안내 */
+.w-install{display:flex;align-items:center;gap:14px;background:#fff;border:2px dashed #F2A03D;border-radius:16px;padding:14px 16px;margin:18px 0 0}
+.w-install img{width:56px;height:56px;border-radius:14px;flex:none}
+.w-install .tx{flex:1;display:flex;flex-direction:column;gap:2px;font-size:14px;color:#4A5568}
+.w-install .tx b{font-size:16px;color:#1B2A41}
+/* 앱으로 실행 중일 때: 노치·상태바 영역 피하기 */
+html.w-app body{padding-top:env(safe-area-inset-top)!important;padding-bottom:env(safe-area-inset-bottom)}

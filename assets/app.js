@@ -389,10 +389,20 @@
       var m = s.title.match(/^(\d+)차시\.\s*(.*)$/);
       var b = el("button", "tb-item");
       b.appendChild(el("span", "n", m ? m[1] + "차시" : "안내"));
-      b.appendChild(el("span", "t", m ? m[2] : s.title));
+      b.appendChild(el("span", "t", m ? m[2] : "목차"));
       b.onclick = function () { show(i, true); };
       list.appendChild(b); btns.push(b);
-      var pane = el("section", "tb-pane"); s.nodes.forEach(function (n) { pane.appendChild(n); });
+      var pane = el("section", "tb-pane");
+      if (i === 0 && !m) {
+        pane.appendChild(el("h2", null, "목차"));
+        var toc = el("div", "tb-toc");
+        secs.forEach(function (s2, k) {
+          var m2 = s2.title.match(/^(\d+)차시\.\s*(.*)$/); if (!m2) return;
+          var r = el("button", "tb-toc-row"); r.appendChild(el("span", "n", m2[1] + "차시")); r.appendChild(el("span", "t", m2[2]));
+          r.onclick = function () { show(k, true); }; toc.appendChild(r);
+        });
+        pane.appendChild(toc);
+      } else s.nodes.forEach(function (n) { pane.appendChild(n); });
       var pn = el("div", "tb-pn");
       if (i > 0) { var pv = el("button", "tb-btn ghost", "← " + (secs[i - 1].title.match(/^\d+차시/) || ["교재 안내"])[0]); pv.onclick = function () { show(i - 1, true); }; pn.appendChild(pv); }
       if (i < secs.length - 1) { var nx = el("button", "tb-btn", (secs[i + 1].title.match(/^\d+차시/) || [""])[0] + " →"); nx.onclick = function () { show(i + 1, true); }; pn.appendChild(nx); }
@@ -413,8 +423,30 @@
     show(start, false);
   }
 
+  /* ---------- 앱(홈 화면 설치) ---------- */
+  var standalone = (window.matchMedia && (matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: fullscreen)").matches)) || navigator.standalone === true;
+  if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register(root + "sw.js", { scope: root || "./" }).catch(function () {}); } catch (e) {} }
+  function installCard() {
+    var main = document.querySelector("main"); if (!main || standalone) return;
+    var ua = navigator.userAgent || "", ios = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    var card = el("div", "w-install");
+    var img = el("img"); img.src = root + "icons/icon-192.png"; img.alt = ""; card.appendChild(img);
+    var tx = el("div", "tx"); tx.appendChild(el("b", null, "앱으로 설치하기"));
+    var p = el("span", null, ios ? "Safari 주소창 옆 공유 버튼(□↑)을 누르고 [홈 화면에 추가]를 고르세요." : "설치하면 홈 화면 아이콘으로 바로 열리고 전체 화면으로 보입니다.");
+    tx.appendChild(p); card.appendChild(tx);
+    var btn = el("button", "w-btn", "설치"); btn.style.display = "none"; card.appendChild(btn);
+    var deferred = null;
+    window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); deferred = e; btn.style.display = ""; });
+    btn.onclick = function () { if (!deferred) return; deferred.prompt(); deferred.userChoice.then(function () { deferred = null; card.remove(); }); };
+    window.addEventListener("appinstalled", function () { card.remove(); });
+    if (!ios) p.textContent = "Chrome·삼성 인터넷: [설치] 버튼, 또는 메뉴(⋮)에서 [앱 설치]/[홈 화면에 추가]를 누르세요.";
+    main.insertBefore(card, main.firstChild);
+  }
+  if (standalone) document.documentElement.classList.add("w-app");
+
   /* ---------- 시작 ---------- */
   renderBar();
+  if (page === "hub") installCard();
   if (document.body.getAttribute("data-lock")) {
     unlock().then(function () { if (page === "exam") examPage(); }, function () {});
   } else {

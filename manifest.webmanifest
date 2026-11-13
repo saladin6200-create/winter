@@ -1,0 +1,19 @@
+{
+  "name": "뜨거운 겨울 방학! 통합과학",
+  "short_name": "뜨거운 겨울",
+  "description": "겨울방학 방과후 수능 대비 통합과학 — 교재와 모의고사",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "any",
+  "background_color": "#121C2E",
+  "theme_color": "#1B2A41",
+  "lang": "ko",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
