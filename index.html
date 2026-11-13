@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>뜨거운 겨울 방학! (통합과학)</title>
+<style>
+  :root {
+    --navy: #1B2A41;
+    --ink: #1B2A41;
+    --soft: #4A5568;
+    --bg: #F6F4EF;
+    --card: #FFFFFF;
+    --line: #DDE2E8;
+    --blue: #2457B8;
+    --fire: #D9531E;
+    --fire2: #F2A03D;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    line-height: 1.5;
+  }
+  header {
+    background: linear-gradient(135deg, #1B2A41 0%, #2B3F61 60%, #3A2F4F 100%);
+    color: #FBFBF8;
+    padding: 56px 24px 64px;
+    text-align: center;
+  }
+  header .eyebrow { font-size: 16px; font-weight: 700; color: #9FC0F5; letter-spacing: 2px; margin: 0 0 12px; }
+  header h1 { font-size: clamp(34px, 6vw, 60px); font-weight: 900; margin: 0; line-height: 1.2; }
+  header h1 .fire {
+    background: linear-gradient(90deg, var(--fire2), var(--fire));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  header p.sub { font-size: 17px; color: #C9D6EA; margin: 16px 0 0; }
+  main { max-width: 1040px; margin: -32px auto 0; padding: 0 20px 64px; }
+  h2 { font-size: 22px; font-weight: 800; margin: 44px 0 16px; display: flex; align-items: center; gap: 10px; }
+  h2::before { content: ""; width: 6px; height: 24px; border-radius: 3px; background: var(--fire); }
+  a.banner {
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    text-decoration: none; color: inherit;
+    background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+    padding: 22px 26px;
+    box-shadow: 0 2px 6px rgba(27, 42, 65, 0.06);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  a.banner:hover, a.banner:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(27, 42, 65, 0.14);
+    border-color: var(--blue);
+    outline: none;
+  }
+  a.banner .go { font-size: 15px; font-weight: 700; color: var(--blue); white-space: nowrap; }
+  a.book {
+    background: linear-gradient(120deg, #FFF7EC 0%, #FFFFFF 70%);
+    border: 2px solid var(--fire2);
+    padding: 30px 32px;
+  }
+  a.book .label { font-size: 14px; font-weight: 700; color: var(--fire); margin: 0 0 6px; }
+  a.book .title { font-size: clamp(22px, 3.2vw, 28px); font-weight: 900; margin: 0; }
+  a.book .desc { font-size: 15px; color: var(--soft); margin: 6px 0 0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+  .grid a.banner { align-items: flex-start; flex-direction: column; gap: 10px; min-height: 150px; }
+  .num {
+    display: inline-block; font-size: 14px; font-weight: 800; color: #FBFBF8;
+    background: var(--navy); border-radius: 999px; padding: 4px 12px;
+  }
+  .grid .title { font-size: 18px; font-weight: 700; margin: 0; flex: 1; }
+  footer { text-align: center; font-size: 13px; color: var(--soft); padding: 0 20px 40px; }
+  .grid .banner { min-height: 120px; }
+  div.banner.soon { display:flex; flex-direction:column; align-items:flex-start; gap:10px; background:#F1F2F4; border:1px dashed #C8CED8; border-radius:18px; padding:22px 26px; color:#6B7280; }
+  div.banner.soon .num { background:#9AA3B2; }
+  div.banner.soon .go { color:#8A94A3; font-weight:700; font-size:15px; }
+  p.pdf { margin: 12px 4px 0; } p.pdf a { color: var(--blue); font-weight: 700; }
+</style>
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body data-page="hub" data-root="">
+<header>
+  <p class="eyebrow">겨울방학 방과후 · 수능 대비</p>
+  <h1><span class="fire">뜨거운</span> 겨울 방학!<br>(통합과학)</h1>
+  <p class="sub">90분 × 10차시 교재와 실전 모의고사</p>
+</header>
+<main>
+  <h2>교재</h2>
+  <a class="banner book" href="textbook/">
+    <div>
+      <p class="label">학생용 교재</p>
+      <p class="title">겨울방학 방과후 수능 대비 통합과학</p>
+      <p class="desc">1~10차시 핵심 개념 정리 · 예제 · 연습문제 · 수능형 문제</p>
+    </div>
+    <span class="go">교재 보기 →</span>
+  </a>
+  <p class="pdf"><a href="textbook/?pdf=1" download>교재 PDF 내려받기 (인쇄용)</a></p>
+
+  <h2>모의고사 (2028 수능 형식 · 25문항 · 40분)</h2>
+  <div class="grid">
+    <a class="banner" href="mock/01/"><span class="num">1회</span><p class="title">통합과학 모의고사 1회</p><span class="go">문제 풀기 →</span></a>
+    <a class="banner" href="mock/02/"><span class="num">2회</span><p class="title">통합과학 모의고사 2회</p><span class="go">문제 풀기 →</span></a>
+    <a class="banner" href="mock/03/"><span class="num">3회</span><p class="title">통합과학 모의고사 3회</p><span class="go">문제 풀기 →</span></a>
+    <a class="banner" href="mock/04/"><span class="num">4회</span><p class="title">통합과학 모의고사 4회</p><span class="go">문제 풀기 →</span></a>
+    <a class="banner" href="mock/05/"><span class="num">5회</span><p class="title">통합과학 모의고사 5회</p><span class="go">문제 풀기 →</span></a>
+    <a class="banner" href="mock/06/"><span class="num">6회</span><p class="title">통합과학 모의고사 6회</p><span class="go">문제 풀기 →</span></a>
+    <a class="banner" href="mock/07/"><span class="num">7회</span><p class="title">통합과학 모의고사 7회</p><span class="go">문제 풀기 →</span></a>
+    <a class="banner" href="mock/08/"><span class="num">8회</span><p class="title">통합과학 모의고사 8회</p><span class="go">문제 풀기 →</span></a>
+    <a class="banner" href="mock/09/"><span class="num">9회</span><p class="title">통합과학 모의고사 9회</p><span class="go">문제 풀기 →</span></a>
+    <a class="banner" href="mock/10/"><span class="num">10회</span><p class="title">통합과학 모의고사 10회</p><span class="go">문제 풀기 →</span></a>
+  </div>
+
+  <h2>내 기록</h2>
+  <a class="banner" href="my/"><div><p class="title" style="font-size:18px;font-weight:700;margin:0">내 모의고사 성적 보기</p><p style="margin:4px 0 0;color:#4A5568;font-size:15px">로그인하면 회차별 점수 추이와 차시별 정답률을 볼 수 있습니다.</p></div><span class="go">기록 보기 →</span></a>
+</main>
+<footer>배너를 누르면 자료가 열립니다.</footer>
+<script src="assets/config.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
