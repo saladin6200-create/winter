@@ -326,7 +326,8 @@
     };
     return attempt(false).then(function (o) {
       var g = document.getElementById("w-gate");
-      g.insertAdjacentHTML("beforebegin", o.html); g.remove();
+      if (page === "textbook") { var box = el("div", "w-raw"); box.innerHTML = o.html; g.parentNode.insertBefore(box, g); g.remove(); textbookLayout(box); }
+      else { g.insertAdjacentHTML("beforebegin", o.html); g.remove(); }
       Array.prototype.forEach.call(document.querySelectorAll("[data-esrc]"), function (img) {
         var src = img.getAttribute("data-esrc"), ext = src.split(".").pop().toLowerCase();
         decryptTo(o.key, src + ".bin").then(function (buf) {
@@ -345,13 +346,71 @@
       return Promise.reject();
     });
   }
+  var pdfUrl = null, PDFNAME = "통합과학_겨울방학_교재.pdf";
+  function saveBlob(u) { var d = document.createElement("a"); d.href = u; d.download = PDFNAME; document.body.appendChild(d); d.click(); d.remove(); }
   function pdf(key, f, a) {
-    var old = a.textContent; a.textContent = "PDF 준비 중…";
+    if (pdfUrl) { saveBlob(pdfUrl); return; }
+    if (a.getAttribute("data-busy")) return;
+    a.setAttribute("data-busy", "1");
+    var old = a.textContent; a.textContent = "PDF 준비 중… (약 12MB)";
     decryptTo(key, f + ".bin").then(function (buf) {
-      var u = URL.createObjectURL(new Blob([buf], { type: "application/pdf" }));
-      var d = document.createElement("a"); d.href = u; d.download = "통합과학_겨울방학_교재.pdf"; document.body.appendChild(d); d.click(); d.remove();
-      a.textContent = old;
-    }).catch(function () { a.textContent = old; alert("PDF를 불러오지 못했습니다."); });
+      pdfUrl = URL.createObjectURL(new Blob([buf], { type: "application/pdf" }));
+      a.removeAttribute("data-busy");
+      a.textContent = "PDF 저장하기 ✓";
+      a.title = "저장이 시작되지 않으면 한 번 더 누르세요";
+      saveBlob(pdfUrl);
+      var tip = document.querySelector(".tb-pdftip"); if (tip) tip.style.display = "block";
+    }).catch(function () { a.removeAttribute("data-busy"); a.textContent = old; alert("PDF를 불러오지 못했습니다. 인터넷 연결을 확인하고 다시 눌러 주세요."); });
+  }
+
+  /* ---------- 교재: 차시별 보기 ---------- */
+  function textbookLayout(box) {
+    document.body.classList.add("w-tb");
+    var kids = Array.prototype.slice.call(box.childNodes);
+    var top = box.querySelector(".topbar"), h1 = box.querySelector("h1");
+    var secs = [], cur = null;
+    kids.forEach(function (n) {
+      if (n === top || n === h1) return;
+      if (n.nodeType === 1 && n.tagName === "H2") { cur = { title: n.textContent, nodes: [] }; secs.push(cur); }
+      if (cur) cur.nodes.push(n);
+    });
+    var wrap = el("div", "tb-wrap"), nav = el("aside", "tb-nav"), main = el("main", "tb-main");
+    var head = el("div", "tb-head");
+    head.appendChild(el("p", "tb-k", "학생용 교재"));
+    head.appendChild(el("p", "tb-t", h1 ? h1.textContent.replace(/\s*\(학생용\)\s*$/, "") : "교재"));
+    nav.appendChild(head);
+    var tools = el("div", "tb-tools");
+    var home = el("a", "tb-btn ghost", "← 처음으로"); home.href = root; tools.appendChild(home);
+    var pdfA = el("a", "tb-btn", "전체 PDF 내려받기"); pdfA.href = "textbook.pdf"; tools.appendChild(pdfA);
+    nav.appendChild(tools);
+    nav.appendChild(el("p", "tb-pdftip", "저장이 시작되지 않으면 버튼을 한 번 더 누르세요."));
+    var list = el("div", "tb-list"), btns = [], panes = [];
+    secs.forEach(function (s, i) {
+      var m = s.title.match(/^(\d+)차시\.\s*(.*)$/);
+      var b = el("button", "tb-item");
+      b.appendChild(el("span", "n", m ? m[1] + "차시" : "안내"));
+      b.appendChild(el("span", "t", m ? m[2] : s.title));
+      b.onclick = function () { show(i, true); };
+      list.appendChild(b); btns.push(b);
+      var pane = el("section", "tb-pane"); s.nodes.forEach(function (n) { pane.appendChild(n); });
+      var pn = el("div", "tb-pn");
+      if (i > 0) { var pv = el("button", "tb-btn ghost", "← " + (secs[i - 1].title.match(/^\d+차시/) || ["교재 안내"])[0]); pv.onclick = function () { show(i - 1, true); }; pn.appendChild(pv); }
+      if (i < secs.length - 1) { var nx = el("button", "tb-btn", (secs[i + 1].title.match(/^\d+차시/) || [""])[0] + " →"); nx.onclick = function () { show(i + 1, true); }; pn.appendChild(nx); }
+      pane.appendChild(pn);
+      main.appendChild(pane); panes.push(pane);
+    });
+    nav.appendChild(list);
+    wrap.appendChild(nav); wrap.appendChild(main);
+    box.parentNode.insertBefore(wrap, box); box.remove();
+    function show(i, scroll) {
+      panes.forEach(function (p, k) { p.style.display = k === i ? "" : "none"; });
+      btns.forEach(function (b, k) { b.classList.toggle("on", k === i); });
+      try { history.replaceState(null, "", "#" + (i === 0 ? "intro" : "l" + i)); } catch (e) {}
+      if (scroll) window.scrollTo(0, 0);
+      if (window.innerWidth <= 860) list.scrollLeft = Math.max(0, btns[i].offsetLeft - list.offsetLeft - 12);
+    }
+    var mh = location.hash.match(/^#l(\d+)$/), start = mh ? Math.min(+mh[1], secs.length - 1) : 0;
+    show(start, false);
   }
 
   /* ---------- 시작 ---------- */
